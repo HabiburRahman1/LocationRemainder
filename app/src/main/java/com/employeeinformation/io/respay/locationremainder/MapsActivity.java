@@ -20,8 +20,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.employeeinformation.io.respay.locationremainder.models.LatitudeLongitude;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -232,10 +230,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            e.printStackTrace();
 //            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
 //        }
+        distanceSolution();
+    }
 
+    private void distanceSolution() {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latitudeLongitudeInfo.getCurrentLatLng()));
+        try{
+            moveCamera(latitudeLongitudeInfo.getRemainderLatLng(),15,"Remainder Place");
+        }catch (Exception e){
+
+        }
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
     }
+
     private void getLocationPermission(){
         Log.d(TAG, "getLocationPermission: getting location permissions");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
@@ -302,7 +309,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             final Place place=places.get(0);
 
-            moveCamera(new LatLng(place.getViewport().getCenter().latitude,place.getViewport().getCenter().longitude),0,place.getName().toString());
+            //moveCamera(new LatLng(place.getViewport().getCenter().latitude,place.getViewport().getCenter().longitude),0,place.getName().toString());
+            latitudeLongitudeInfo.setRemainderLatLng(new LatLng(place.getViewport().getCenter().latitude,place.getViewport().getCenter().longitude));
             places.release();
         }
     };
